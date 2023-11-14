@@ -27,7 +27,16 @@ with st.form("add_products"):
         st.success("Product Added")
 
 # PDF Generation
+# PDF Generation and Download
 if st.button("Generate Bill"):
     customer = get_customer_by_mobile(db, customer_mobile)
-    generate_pdf(customer)
-    st.success("PDF Generated")
+    pdf_file = generate_pdf(customer)
+
+    # Download button
+    st.download_button(
+            label="Download PDF",
+            data=pdf_file,
+            file_name="grocery_bill.pdf",
+            mime="application/octet-stream"
+        )
+
