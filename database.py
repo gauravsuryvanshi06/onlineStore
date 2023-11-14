@@ -1,47 +1,22 @@
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from io import BytesIO
 
-# from pymongo.mongo_client import MongoClient
+def generate_pdf(customer):
+    buffer = BytesIO()
+    c = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter
+    c.drawString(100, height - 100, f"Customer Name: {customer['name']}")
+    c.drawString(100, height - 120, f"Mobile Number: {customer['mobile']}")
 
-# uri = "mongodb+srv://online:Gaurav@321@online.ol4zd0a.mongodb.net/?retryWrites=true&w=majority"
-from pymongo import MongoClient
-from urllib.parse import quote_plus
+    y_position = height - 140
+    for product in customer.get("products", []):
+        c.drawString(100, y_position, f"Product: {product['name']}, Price: {product['price']}")
+        y_position -= 20
 
-username = "online"  # Replace with your actual username
-password = "Gaurav@321"  # Replace with your actual password
+    c.drawString(100, y_position - 20, f"Total Bill: {sum(p['price'] for p in customer.get('products', []))}")
+    c.save()
+    buffer.seek(0)
+    return buffer
 
-escaped_username = quote_plus(username)
-escaped_password = quote_plus(password)
 
-uri = f"mongodb+srv://{escaped_username}:{escaped_password}@online.ol4zd0a.mongodb.net/onlinr?retryWrites=true&w=majority"
-
-client = MongoClient(uri)
-
-def get_database():
-    connection_string = "mongodb://atlas-sql-649f109d3916b8466dca1fc0-45hpj.a.query.mongodb.net/mongodbVSCodePlaygroundDB?ssl=true&authSource=admin"
-    client = MongoClient(uri)
-    return client['online']
-
-def add_customer(db, name, mobile):
-    db.customers.insert_one({"name": name, "mobile": mobile})
-
-def get_customer_by_mobile(db, mobile):
-    return db.customers.find_one({"mobile": mobile})
-
-def add_product_to_customer(db, mobile, product, price):
-    db.customers.update_one({"mobile": mobile}, {"$push": {"products": {"name": product, "price": price}}})
-
-# mongodb+srv://<username>:<password>@cluster0.2hzf2nt.mongodb.net/?retryWrites=true&w=majority
-
-# from pymongo.mongo_client import MongoClient
-# from pymongo.server_api import ServerApi
-
-# uri = "mongodb+srv://<username>:<password>@cluster0.2hzf2nt.mongodb.net/?retryWrites=true&w=majority"
-
-# # Create a new client and connect to the server
-# client = MongoClient(uri, server_api=ServerApi('1'))
-
-# # Send a ping to confirm a successful connection
-# try:
-#     client.admin.command('ping')
-#     print("Pinged your deployment. You successfully connected to MongoDB!")
-# except Exception as e:
-#     print(e)
