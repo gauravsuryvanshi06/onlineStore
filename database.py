@@ -24,7 +24,21 @@ def get_customer_by_mobile(db, mobile):
 
 def add_product_to_customer(db, mobile, product, price):
     db.customers.update_one({"mobile": mobile}, {"$push": {"products": {"name": product, "price": price}}})
-    
+
+
+
+def aggregate_product_sales(db):
+    pipeline = [
+        {"$unwind": "$products"},
+        {"$group": {
+            "_id": "$products.name",
+            "total_quantity_sold": {"$sum": "$products.quantity"}
+        }},
+        {"$sort": {"total_quantity_sold": -1}}
+    ]
+    print(pipeline)
+    print(list(db.customers.aggregate(pipeline)))
+    return list(db.customers.aggregate(pipeline))
 def aggregate_product_data(db):
     pipeline = [
         {"$unwind": "$products"},  # Unwind the products array
