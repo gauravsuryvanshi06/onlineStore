@@ -26,17 +26,19 @@ with st.form("add_products"):
         add_product_to_customer(db, customer_mobile, selected_product, products[selected_product])
         st.success("Product Added")
 
-# PDF Generation
-# PDF Generation and Download
 if st.button("Generate Bill"):
     customer = get_customer_by_mobile(db, customer_mobile)
-    pdf_file = generate_pdf(customer)
+    if customer:
+        pdf_file = generate_pdf(customer)
 
-    # Download button
-    st.download_button(
+        # Convert BytesIO to bytes for download
+        pdf_bytes = pdf_file.getvalue()
+        st.download_button(
             label="Download PDF",
-            data=pdf_file,
+            data=pdf_bytes,
             file_name="grocery_bill.pdf",
-            mime="application/octet-stream"
+            mime="application/pdf"
         )
+    else:
+        st.error("Customer not found. Please check the mobile number.")
 
