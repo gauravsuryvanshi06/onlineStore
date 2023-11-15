@@ -1,7 +1,7 @@
 import streamlit as st
 from database import get_database, add_customer, get_customer_by_mobile, add_product_to_customer
 from pdf import generate_pdf
-from database import aggregate_product_sales, categorize_product_demand, get_all_customers_data
+from database import aggregate_product_sales, categorize_product_demand, get_all_customers_data, aggregate_total_quantities
 import pandas as pd
 db = get_database()
 
@@ -75,5 +75,21 @@ if st.button("Show Customer Data"):
             st.subheader(f"Customer: {customer['name']} - Mobile: {customer['mobile']}")
             for product in customer['products']:
                 st.write(f"Product: {product['name']}, Quantity: {product.get('quantity', 1)}")
+    else:
+        st.write("No customer data available.")
+
+if st.button("Show Customer Data"):
+    customer_data = get_all_customers_data(db)
+    if customer_data:
+        # Display customer data
+        customer_df = pd.DataFrame(customer_data)
+        st.subheader("Customer Purchase Data")
+        st.table(customer_df)
+
+        # Display aggregated total quantities
+        total_quantities = aggregate_total_quantities(customer_data)
+        total_df = pd.DataFrame(list(total_quantities.items()), columns=['Product', 'Total Quantity'])
+        st.subheader("Total Quantities of Products Bought")
+        st.table(total_df)
     else:
         st.write("No customer data available.")
