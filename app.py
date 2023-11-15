@@ -106,3 +106,26 @@ if st.button("Show Customer Data"):
         # ... (rest of the code for aggregating total quantities)
     else:
         st.write("No customer data available.")
+# app.py
+# ... (previous code)
+
+if st.button("Show Customer Data"):
+    customer_data = get_all_customers_data(db)
+    if customer_data:
+        # Iterate over each customer's data
+        for customer in customer_data:
+            # Safely access 'name' and other keys from the customer dictionary
+            customer_name = customer.get('name', 'Unknown Customer')
+            customer_mobile = customer.get('mobile', 'Unknown Mobile')
+            st.subheader(f"Customer: {customer_name}, Mobile: {customer_mobile}")
+
+            # Displaying each product purchased by the customer
+            if 'products' in customer and customer['products']:
+                for product in customer['products']:
+                    product_name = product.get('name', 'Unknown Product')
+                    quantity = product.get('quantity', 'N/A')
+                    st.write(f"Product: {product_name}, Quantity: {quantity}")
+            else:
+                st.write("No products found for this customer")
+    else:
+        st.write("No customer data available.")
