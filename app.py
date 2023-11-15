@@ -44,23 +44,22 @@ if st.button("Generate Bill"):
         st.error("Customer not found. Please check the mobile number.")
 
 # ... your existing Streamlit app code ...
+# ... other code ...
 
 if st.button("Analyze Product Demand"):
     sales_data = aggregate_product_sales(db)
     demand_analysis = categorize_product_demand(sales_data)
 
-    # Display Demand Analysis
-    st.subheader("Demand Analysis")
-    for category, products in demand_analysis.items():
-        st.markdown(f"**{category.capitalize()} Demand Products:**")
-        st.write(products)
-    # ... existing demand analysis display code ...
+    # Display the analysis and sales data
+    # ... code to display demand analysis ...
 
-    # Display Sales Data in Table Format
     st.subheader("Quantity-wise Selling of Products")
-    sales_df = pd.DataFrame(sales_data)
-    if not sales_df.empty:
-        sales_df.rename(columns={'_id': 'Product', 'total_sold': 'Total Sold'}, inplace=True)
-        st.table(sales_df)
-    else:
-        st.write("No sales data available.")
+    try:
+        sales_df = pd.DataFrame(sales_data)
+        if not sales_df.empty:
+            sales_df.rename(columns={'_id': 'Product', 'total_quantity_sold': 'Total Sold'}, inplace=True)
+            st.table(sales_df)
+        else:
+            st.write("No sales data available.")
+    except NameError:
+        st.error("Pandas is not installed or not imported correctly.")
