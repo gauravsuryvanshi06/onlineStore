@@ -45,6 +45,9 @@ if st.button("Generate Bill"):
 
 # ... your existing Streamlit app code ...
 # ... other code ...
+if st.button("Refresh Data"):
+    sales_data = aggregate_product_sales(db)
+    # rest of the code to display the data
 
 if st.button("Analyze Product Demand"):
     sales_data = aggregate_product_sales(db)
