@@ -66,3 +66,14 @@ if st.button("Analyze Product Demand"):
             st.write("No sales data available.")
     except NameError:
         st.error("Pandas is not installed or not imported correctly.")
+st.write("Customer Purchase Data")
+
+if st.button("Show Customer Data"):
+    customer_data = get_all_customers_data(db)
+    if customer_data:
+        for customer in customer_data:
+            st.subheader(f"Customer: {customer['name']} - Mobile: {customer['mobile']}")
+            for product in customer['products']:
+                st.write(f"Product: {product['name']}, Quantity: {product.get('quantity', 1)}")
+    else:
+        st.write("No customer data available.")
