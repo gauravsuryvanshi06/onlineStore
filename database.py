@@ -35,7 +35,7 @@ def aggregate_product_sales(db):
         {"$sort": {"total_quantity_sold": -1}}
     ]
     print(pipeline)
-    print(list(db.customers.aggregate(pipeline))
+    print(list(db.customers.aggregate(pipeline)))
     return list(db.customers.aggregate(pipeline))
 
 
