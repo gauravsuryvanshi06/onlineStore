@@ -26,16 +26,18 @@ def add_product_to_customer(db, mobile, product, price):
     db.customers.update_one({"mobile": mobile}, {"$push": {"products": {"name": product, "price": price}}})
     
 def aggregate_product_sales(db):
-    # This pipeline aggregates the total quantity sold for each product
     pipeline = [
-        {"$unwind": "$products"},  # Unwinds the products array
+        {"$unwind": "$products"},
         {"$group": {
-            "_id": "$products.name",  # Groups by product name
-            "total_quantity_sold": {"$sum": "$products.quantity"}  # Sums up the quantity for each product
+            "_id": "$products.name",
+            "total_quantity_sold": {"$sum": "$products.quantity"}
         }},
-        {"$sort": {"total_quantity_sold": -1}}  # Sorts the result by total quantity sold in descending order
+        {"$sort": {"total_quantity_sold": -1}}
     ]
+    print(pipeline)
+    print(list(db.customers.aggregate(pipeline))
     return list(db.customers.aggregate(pipeline))
+
 
 
 def categorize_product_demand(sales_data):
