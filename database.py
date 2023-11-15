@@ -36,3 +36,25 @@ def aggregate_product_sales(db):
         {"$sort": {"total_quantity_sold": -1}}  # Sorts the result by total quantity sold in descending order
     ]
     return list(db.customers.aggregate(pipeline))
+
+
+def categorize_product_demand(sales_data):
+    # Define thresholds for high, medium, and low demand
+    high_demand_threshold = 100  # Example value, adjust as needed
+    medium_demand_threshold = 50  # Example value, adjust as needed
+
+    categorized_data = {
+        "high_demand": [],
+        "medium_demand": [],
+        "low_demand": []
+    }
+
+    for product in sales_data:
+        if product['total_quantity_sold'] >= high_demand_threshold:
+            categorized_data['high_demand'].append(product['_id'])
+        elif product['total_quantity_sold'] >= medium_demand_threshold:
+            categorized_data['medium_demand'].append(product['_id'])
+        else:
+            categorized_data['low_demand'].append(product['_id'])
+
+    return categorized_data
