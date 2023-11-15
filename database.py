@@ -1,22 +1,26 @@
-from reportlab.lib.pagesizes import letter
-from reportlab.pdfgen import canvas
-from io import BytesIO
+from pymongo import MongoClient
+from urllib.parse import quote_plus
 
-def generate_pdf(customer):
-    buffer = BytesIO()
-    c = canvas.Canvas(buffer, pagesize=letter)
-    width, height = letter
-    c.drawString(100, height - 100, f"Customer Name: {customer['name']}")
-    c.drawString(100, height - 120, f"Mobile Number: {customer['mobile']}")
+username = "online"  # Replace with your actual username
+password = "Gaurav@321"  # Replace with your actual password
 
-    y_position = height - 140
-    for product in customer.get("products", []):
-        c.drawString(100, y_position, f"Product: {product['name']}, Price: {product['price']}")
-        y_position -= 20
+escaped_username = quote_plus(username)
+escaped_password = quote_plus(password)
 
-    c.drawString(100, y_position - 20, f"Total Bill: {sum(p['price'] for p in customer.get('products', []))}")
-    c.save()
-    buffer.seek(0)
-    return buffer
+uri = f"mongodb+srv://{escaped_username}:{escaped_password}@online.ol4zd0a.mongodb.net/onlinr?retryWrites=true&w=majority"
 
+client = MongoClient(uri)
 
+def get_database():
+    connection_string = "mongodb://atlas-sql-649f109d3916b8466dca1fc0-45hpj.a.query.mongodb.net/mongodbVSCodePlaygroundDB?ssl=true&authSource=admin"
+    client = MongoClient(uri)
+    return client['online']
+
+def add_customer(db, name, mobile):
+    db.customers.insert_one({"name": name, "mobile": mobile})
+
+def get_customer_by_mobile(db, mobile):
+    return db.customers.find_one({"mobile": mobile})
+
+def add_product_to_customer(db, mobile, product, price):
+    db.customers.update_one({"mobile": mobile}, {"$push": {"products": {"name": product, "price": price}}})
