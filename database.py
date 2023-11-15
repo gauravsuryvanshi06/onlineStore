@@ -85,7 +85,25 @@ def get_all_customers_d(db):
         customer_data.append(customer_info)
     return customer_data
 
+#final
+
+
 def get_all_customers_data(db):
+    customers = db.customers.find()
+    all_data = []
+    for customer in customers:
+        customer_name = customer.get("name", "N/A")
+        customer_mobile = customer.get("mobile", "N/A")
+        for product in customer.get("products", []):
+            all_data.append({
+                "Customer Name": customer_name,
+                "Mobile": customer_mobile,
+                "Product": product.get('name', 'Unknown Product'),
+                "Quantity": product.get('quantity', 1)
+            })
+    return all_data
+
+def get_all_customers_data2(db):
     customers = db.customers.find()
     all_data = []
     for customer in customers:
