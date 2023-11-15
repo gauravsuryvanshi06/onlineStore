@@ -72,3 +72,15 @@ def categorize_product_demand(sales_data):
             categorized_data['low_demand'].append(product['_id'])
 
     return categorized_data
+    
+def get_all_customers_data(db):
+    customers = db.customers.find()
+    customer_data = []
+    for customer in customers:
+        customer_info = {
+            "name": customer.get("name", "N/A"),
+            "mobile": customer.get("mobile", "N/A"),
+            "products": customer.get("products", [])
+        }
+        customer_data.append(customer_info)
+    return customer_data
