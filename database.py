@@ -73,7 +73,7 @@ def categorize_product_demand(sales_data):
 
     return categorized_data
     
-def get_all_customers_data(db):
+def get_all_customers_d(db):
     customers = db.customers.find()
     customer_data = []
     for customer in customers:
@@ -84,3 +84,28 @@ def get_all_customers_data(db):
         }
         customer_data.append(customer_info)
     return customer_data
+
+def get_all_customers_data(db):
+    customers = db.customers.find()
+    all_data = []
+    for customer in customers:
+        for product in customer.get("products", []):
+            all_data.append({
+                "Customer Name": customer.get("name", "N/A"),
+                "Mobile": customer.get("mobile", "N/A"),
+                "Product": product['name'],
+                "Quantity": product.get('quantity', 1)
+            })
+    return all_data
+
+
+def aggregate_total_quantities(customer_data):
+    total_quantities = {}
+    for entry in customer_data:
+        product = entry["Product"]
+        quantity = entry["Quantity"]
+        if product in total_quantities:
+            total_quantities[product] += quantity
+        else:
+            total_quantities[product] = quantity
+    return total_quantities
