@@ -93,3 +93,16 @@ if st.button("Show Customer Data"):
         st.table(total_df)
     else:
         st.write("No customer data available.")
+# app.py
+# ... (previous code)
+
+if st.button("Show Customer Data"):
+    customer_data = get_all_customers_data(db)
+    if customer_data:
+        # Convert to DataFrame and display
+        customer_df = pd.DataFrame(customer_data)
+        st.subheader("Customer Purchase Data")
+        st.table(customer_df)
+        # ... (rest of the code for aggregating total quantities)
+    else:
+        st.write("No customer data available.")
