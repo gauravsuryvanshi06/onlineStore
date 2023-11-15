@@ -1,7 +1,7 @@
 import streamlit as st
 from database import get_database, add_customer, get_customer_by_mobile, add_product_to_customer
 from pdf import generate_pdf
-from database import aggregate_product_sales, categorize_product_demand
+from database import aggregate_product_sales, categorize_product_demand, get_all_customers_data
 import pandas as pd
 db = get_database()
 
